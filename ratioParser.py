@@ -4,6 +4,11 @@ from bs4 import BeautifulSoup
 from loguru import logger
 import os
 
+def parseNumber(target: str) -> float:
+    try:
+        return float(target.replace("%", "").strip())
+    except:
+        return target[0:target.find('%')]
 def parseRatioFromXml(xmlName):
     targetXmlFilePath = f"./reports/{xmlName}"
     codedXmlFile = ""
@@ -13,26 +18,23 @@ def parseRatioFromXml(xmlName):
     except:
         with open(targetXmlFilePath, 'r', encoding='euc-kr') as f:
             codedXmlFile = '\n'.join(f.readlines())
-    #codedXmlFile = codedXmlFile.replace("th","td").replace("TH","TD")
+    codedXmlFile = codedXmlFile.replace("th","td").replace("TH","TD")
     ele = BeautifulSoup(codedXmlFile, 'lxml')
     for pTag in ele.findAll('p'):
         pTag.replace_with(pTag.text)
     trLi = ele.findAll('tr')
+    #logger.info(trLi)
     for idx in range(len(trLi)):
         curTr = trLi[idx]
-        #logger.info(curTr.findAll('th'))
-        if len(curTr.findAll('th')) == 4 and '증거금' in curTr.findAll('th')[3].text.strip():
-            #logger.info(curTr.text)
-            return float(trLi[idx+1].findAll('td')[3].text.replace("%","").strip())
         if len(curTr.findAll('td')) == 4 and '증거금' in curTr.findAll('td')[3].text.strip():
             #logger.info(curTr.text)
-            return float(trLi[idx+1].findAll('td')[3].text.replace("%","").strip())
-        if len(curTr.findAll('th')) == 5 and '증거금' in curTr.findAll('th')[4].text.strip():
-            # logger.info(curTr.text)
-            return float(trLi[idx + 1].findAll('td')[4].text.replace("%","").strip())
+            return parseNumber(trLi[idx+1].findAll('td')[3].text)
+            # return float(trLi[idx+1].findAll('td')[3].text.replace("%","").strip())
+
         if len(curTr.findAll('td')) == 5 and '증거금' in curTr.findAll('td')[4].text.strip():
             # logger.info(curTr.text)
-            return float(trLi[idx + 1].findAll('td')[4].text.replace("%","").strip())
+            return parseNumber(trLi[idx+1].findAll('td')[4].text)
+            # return float(trLi[idx + 1].findAll('td')[4].text.replace("%","").strip())
 
 #
 # if __name__ == "__main__":
