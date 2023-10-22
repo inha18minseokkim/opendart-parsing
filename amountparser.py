@@ -3,8 +3,7 @@ import re
 from bs4 import BeautifulSoup
 from loguru import logger
 import os
-
-def parseFromXml(xmlName):
+def parseAmountFromXml(xmlName):
     targetXmlFilePath = f"./reports/{xmlName}"
     codedXmlFile = ""
     try:
@@ -13,15 +12,10 @@ def parseFromXml(xmlName):
     except:
         with open(targetXmlFilePath, 'r', encoding='euc-kr') as f:
             codedXmlFile = '\n'.join(f.readlines())
-
-    # codedXmlFile = codedXmlFile.replace('TH', 'TR')
-    # codedXmlFile = codedXmlFile.replace('th', 'tr')
-
+    #codedXmlFile = codedXmlFile.replace("TH","TD").replace("th","td")
     ele = BeautifulSoup(codedXmlFile,'lxml')
     for pTag in ele.findAll('p'):
         pTag.replace_with(pTag.text)
-
-    #logger.info(ele.getText)
 
     trLi = ele.findAll('tr')
     pattern = re.compile(r'.*청약단위.*')
@@ -50,9 +44,10 @@ def parseFromXml(xmlName):
                 tmpArr.append(f'{second:30}')
                 return tmpArr
             except:
-                logger.error(curTr)
-                logger.error(curTr.findAll('td'))
-                logger.error(trLi[idx+1])
+                logger.error(xmlName + " 오류")
+                #logger.error(curTr)
+                #logger.error(curTr.findAll('td'))
+                #logger.error(trLi[idx+1])
         if len(curTr.findAll('td')) != 0 and curTr.findAll('td')[0].text.strip() == '청약주식수' and curTr.findAll('td')[1].text.strip() == '청약단위':
             try:
                 tmpArr = []
@@ -63,20 +58,25 @@ def parseFromXml(xmlName):
                 tmpArr.append(f'{second:30}')
                 return tmpArr
             except:
-                logger.error(curTr)
-                logger.error(trLi[idx+1])
+                logger.error(xmlName +" 오류")
+                #logger.error(curTr)
+                #logger.error(trLi[idx+1])
     resArr.append(f'{ele.find("title").text:20}')
     return resArr
 
-if __name__ == "__main__":
-    # logger.info(parseFromXml('20221111000250.xml'))
-    # exit(0)
-    folderPath = './reports'
-    fileNames = [f for f in os.listdir(folderPath) if os.path.isfile(os.path.join(folderPath, f))]
-    for fileName in fileNames:
-        try:
-            logger.info(fileName + " " + '@'.join(parseFromXml(fileName)))
-        except UnicodeDecodeError as e:
-            logger.error(fileName +"  "+ e.reason)
-        except IndexError as e:
-            logger.error(fileName +"  " + str(e))
+
+
+# if __name__ == "__main__":
+#     # logger.info(parseRatioFromXml('20221111000250.xml'))
+#     # exit(0)
+#     folderPath = './reports'
+#     fileNames = [f for f in os.listdir(folderPath) if os.path.isfile(os.path.join(folderPath, f))]
+#     for fileName in fileNames:
+#         try:
+#             logger.info(f"{fileName:20}/{parseCompanyNameFromXml(fileName):10}")
+#             logger.info('@'.join(parseAmountFromXml(fileName)))
+#             logger.info(parseRatioFromXml(fileName))
+#         except UnicodeDecodeError as e:
+#             logger.error(fileName +"  "+ "UnicodeDecodeError")
+#         except IndexError as e:
+#             logger.error(fileName +"  " + "indexError")
