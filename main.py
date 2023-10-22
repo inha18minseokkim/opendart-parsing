@@ -8,7 +8,7 @@ from infoParser import parseCompanyNameFromXml
 from ratioParser import parseRatioFromXml
 
 if __name__ == "__main__":
-    # logger.info(parseRatioFromXml('20221021000146.xml'))
+    # logger.info(parseRatioFromXml('20211102000141.xml'))
     # exit(0)
     folderPath = './reports'
     fileNames = [f for f in os.listdir(folderPath) if os.path.isfile(os.path.join(folderPath, f))]
