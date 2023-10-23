@@ -3,7 +3,7 @@ import re
 from bs4 import BeautifulSoup
 from loguru import logger
 import os
-from amountparser import parseAmountFromXml
+from amountparser import parseAmountFromXml, parseAmountNumberfromString
 from infoParser import parseCompanyNameFromXml
 from ratioParser import parseRatioFromXml,parseNumberFromStatement
 
@@ -19,6 +19,10 @@ if __name__ == "__main__":
             #청약 주식단위 찾기
             amountList = parseAmountFromXml(fileName)
             logger.info(amountList)
+            if len(amountList) < 3:
+                pass
+            else :
+                logger.info(f"{parseAmountNumberfromString(amountList[1])} {parseAmountNumberfromString(amountList[2])} 중 큰거")
             #비율 찾기
             ratio = parseRatioFromXml(fileName)
             try:

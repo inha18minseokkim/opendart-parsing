@@ -3,6 +3,21 @@ import re
 from bs4 import BeautifulSoup
 from loguru import logger
 import os
+
+def parseAmountNumberfromString(text):
+    # 10주 << 이거 파싱할거
+    pattern = r'(\d+)'
+
+    # Using re.search to find the pattern in the text
+    match = re.search(pattern, text)
+
+    # Extracting the percentage value if a match is found
+    if match:
+        amountValue = int(match.group(1))
+        #print(text, amountValue)
+        return amountValue  # Output: 50
+    else:
+        raise Exception("주식수량 변환 실패")
 def parseAmountFromXml(xmlName):
     targetXmlFilePath = f"./reports/{xmlName}"
     codedXmlFile = ""

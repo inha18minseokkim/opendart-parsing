@@ -15,7 +15,7 @@ def parseNumberFromStatement(text: str)-> float:
     # Extracting the percentage value if a match is found
     if match:
         percentage_value = float(match.group(1))
-        print(text, percentage_value)
+        #print(text, percentage_value)
         return percentage_value  # Output: 50
     else:
         raise Exception("최후의 변환 실패")
