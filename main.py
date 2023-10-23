@@ -5,7 +5,7 @@ from loguru import logger
 import os
 from amountparser import parseAmountFromXml
 from infoParser import parseCompanyNameFromXml
-from ratioParser import parseRatioFromXml
+from ratioParser import parseRatioFromXml,parseNumberFromStatement
 
 if __name__ == "__main__":
     # logger.info(parseRatioFromXml('20211102000141.xml'))
@@ -21,7 +21,14 @@ if __name__ == "__main__":
             logger.info(amountList)
             #비율 찾기
             ratio = parseRatioFromXml(fileName)
-            logger.info(ratio)
+            try:
+                logger.info(float(ratio))
+            except:
+                if(ratio != '못찾음'):
+                    logger.error(ratio)
+                    logger.info(parseNumberFromStatement(ratio))
+                else:
+                    logger.info(ratio)
         except UnicodeDecodeError as e:
             logger.error(fileName +"  "+ "UnicodeDecodeError")
         except IndexError as e:

@@ -4,6 +4,22 @@ from bs4 import BeautifulSoup
 from loguru import logger
 import os
 
+
+def parseNumberFromStatement(text: str)-> float:
+    # 미래에셋대우㈜의 일반청약자 청약증거금율은 50%입니다
+    pattern = r'(\d+)%'
+
+    # Using re.search to find the pattern in the text
+    match = re.search(pattern, text)
+
+    # Extracting the percentage value if a match is found
+    if match:
+        percentage_value = float(match.group(1))
+        print(text, percentage_value)
+        return percentage_value  # Output: 50
+    else:
+        raise Exception("최후의 변환 실패")
+
 def parseNumber(target: str) -> float:
     try:
         return float(target.replace("%", "").strip())
