@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
 from loguru import logger
 import os
 def parseCompanyNameFromXml(xmlName):
-    targetXmlFilePath = f"./reports/{xmlName}"
+    targetXmlFilePath = f"./resources/reports/{xmlName}"
     codedXmlFile = ""
     try:
         with open(targetXmlFilePath, 'r', encoding='utf-8') as f:

@@ -19,7 +19,7 @@ def parseAmountNumberfromString(text):
     else:
         raise Exception("주식수량 변환 실패")
 def parseAmountFromXml(xmlName):
-    targetXmlFilePath = f"./reports/{xmlName}"
+    targetXmlFilePath = f"resources/reports/{xmlName}"
     codedXmlFile = ""
     try:
         with open(targetXmlFilePath, 'r', encoding='utf-8') as f:

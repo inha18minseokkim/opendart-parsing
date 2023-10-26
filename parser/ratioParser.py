@@ -28,7 +28,7 @@ def parseNumber(target: str) -> float:
         return float(target[0:target.find('%')])
 
 def parseStatement(xmlName):
-    targetXmlFilePath = f"./reports/{xmlName}"
+    targetXmlFilePath = f"./resources/reports/{xmlName}"
     codedXmlFile = ""
     try:
         with open(targetXmlFilePath, 'r', encoding='utf-8') as f:
@@ -46,7 +46,7 @@ def parseStatement(xmlName):
             return trLi[i].text
     return "못찾음"
 def parseRatioFromXml(xmlName):
-    targetXmlFilePath = f"./reports/{xmlName}"
+    targetXmlFilePath = f"./resources/reports/{xmlName}"
     codedXmlFile = ""
     try:
         with open(targetXmlFilePath, 'r', encoding='utf-8') as f:
