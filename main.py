@@ -1,11 +1,8 @@
-import xml.etree.ElementTree as elemTree
-import re
-from bs4 import BeautifulSoup
 from loguru import logger
 import os
-from amountparser import parseAmountFromXml, parseAmountNumberfromString
-from infoParser import parseCompanyNameFromXml
-from ratioParser import parseRatioFromXml,parseNumberFromStatement
+from parser.amountparser import parseAmountFromXml, parseAmountNumberfromString
+from parser.infoParser import parseCompanyNameFromXml
+from parser.ratioParser import parseRatioFromXml,parseNumberFromStatement
 
 if __name__ == "__main__":
     # logger.info(parseRatioFromXml('20211102000141.xml'))

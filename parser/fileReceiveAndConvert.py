@@ -88,7 +88,7 @@ def convertXmlData(rcept_no):
 
 
 if __name__ == "__main__":
-    data = read_ipo_data('./ipo_dat.csv')
+    data = read_ipo_data('../ipo_dat.csv')
     idx = 0
     for ele in data:
         if ele.fssRcipNbr == None or len(ele.fssRcipNbr.strip()) == 0:
