@@ -1,4 +1,4 @@
-import declaration
+from db import declaration
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 DB_URL = f'mysql+pymysql://{declaration.USERNAME_DB}:{declaration.PASSWORD_DB}@{declaration.HOST_DB}:{declaration.PORT_DB}/{declaration.NAME_DB}'

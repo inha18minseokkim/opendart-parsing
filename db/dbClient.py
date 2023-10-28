@@ -1,6 +1,6 @@
-from models import CorpCode
+from db.dbModel import CorpCode
 from loguru import logger
-from dbConnect import conn
+from db.dbConnect import conn
 
 def saveDB(tb: CorpCode):
     session = conn.sessionmaker()
@@ -13,3 +13,7 @@ def saveDB(tb: CorpCode):
         session.close()
         return {'code': 1}
     logger.debug("삽입완료")
+
+def getCorpCodeByCorpName(corpName: str) -> list[CorpCode]:
+    session = conn.sessionmaker()
+    return session.query(CorpCode).filter(CorpCode.corpName == corpName).all()
