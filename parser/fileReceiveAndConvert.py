@@ -1,7 +1,7 @@
 import csv
 import zipfile
 import requests
-import time
+import chardet
 from loguru import logger
 
 from dto.ipoData import IpoInfo
@@ -33,33 +33,39 @@ def getFileData(rcept_no):
     logger.info(endPoint)
     response = requests.get(endPoint)
     try:
-        with open("./reportZips/"+rcept_no+".zip",'wb') as f:
+        with open("./resources/reportZips/"+rcept_no+".zip",'wb') as f:
             f.write(response.content)
-    except:
-        logger.error(rcept_no +" when download zipfile")
+    except FileNotFoundError as e:
+        logger.error(rcept_no +" when download zipfile " + e.strerror)
 
 def unzipFileData(rcept_no):
-    zipFilePath = "/resources/reportZips/"+rcept_no+".zip"
-    targetXmlFilePath = "./reports"
+    zipFilePath = "./resources/reportZips/"+rcept_no+".zip"
+    targetXmlFilePath = "./resources/reports"
     try:
         with zipfile.ZipFile(zipFilePath,'r') as f:
             f.extractall(targetXmlFilePath)
-    except:
-        logger.error(rcept_no + " when extract from zipfile")
+    except Exception as e:
+        logger.error(rcept_no + " when extract from zipfile " + e.__str__())
 def convertXmlData(rcept_no):
 
-    targetXmlFilePath = "resources//reports"
+    targetXmlFilePath = "./resources/reports/"+rcept_no+".xml"
     try:
-        with open(targetXmlFilePath,'r',encoding='euc-kr') as f:
-            lines = f.readlines()
-        with open(targetXmlFilePath,'w',encoding='utf-8') as f:
-            f.writelines(f)
-    except:
-        logger.error(rcept_no + " when convert euc-kr -> utf-8 from zipfile")
-
+        with open(targetXmlFilePath,'r',encoding='euc-kr') as fRead:
+            lines = fRead.readlines()
+    except Exception as e:
+        logger.error(rcept_no + " when convert euc-kr -> utf-8 from zipfile" + e.__str__())
+    else:
+        with open(targetXmlFilePath, 'w', encoding='utf-8') as fWrite:
+            fWrite.writelines(lines)
+def getUnzipConvert(rcept_no):
+    getFileData(rcept_no)
+    unzipFileData(rcept_no)
+    convertXmlData(rcept_no)
 
 
 if __name__ == "__main__":
+    getUnzipConvert("20220805000213")
+    exit(0)
     data = read_ipo_data('resources/ipo_dat.csv')
     idx = 0
     for ele in data:

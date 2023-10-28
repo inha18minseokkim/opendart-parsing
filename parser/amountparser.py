@@ -54,8 +54,9 @@ def parseAmountFromXml(xmlName):
         #     except:
         #         logger.error(xmlName + " 오류")
 
-        if len(curTr.findAll('td')) != 0 and (curTr.findAll('td')[0].text.strip() == '청약주식수' or curTr.findAll('td')[0].text.strip() == '청약증권수')\
-                and curTr.findAll('td')[1].text.strip() == '청약단위':
+        if len(curTr.findAll('td')) != 0 \
+                and (curTr.findAll('td')[0].text.strip() == '청약주식수' or curTr.findAll('td')[0].text.strip() == '청약증권수' or curTr.findAll('td')[0].text.strip() == '구분')\
+                and ('단위' in curTr.findAll('td')[1].text.strip() and '청약' in curTr.findAll('td')[1].text.strip()):
             try:
                 tmpArr = []
                 tmpArr.append(f'{ele.find("title").text:20}')
@@ -66,6 +67,7 @@ def parseAmountFromXml(xmlName):
                 return tmpArr
             except:
                 logger.error(xmlName +" 오류")
-
+    #logger.debug(ele)
+    #logger.debug(ele.find('title'))
     resArr.append(f'{ele.find("title").text:20}')
     return resArr

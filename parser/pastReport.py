@@ -29,4 +29,4 @@ def loadPastReportReceptNumber(corpName: str,dmdFrcsStartDt: str):
 
 
 if __name__ == "__main__":
-    logger.debug(loadPastReportReceptNumber("케이비제22호스팩","20220905"))
+    logger.debug(loadPastReportReceptNumber("에이치케이이노엔","20210722"))
