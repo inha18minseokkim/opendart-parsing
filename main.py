@@ -40,7 +40,12 @@ if __name__ == "__main__":
                     logger.error(ratio)
                     logger.info(parseNumberFromStatement(ratio))
                 else:
-                    logger.info(ratio)
+                    logger.error("못찾아서 과거 자료로 다시 찾음")
+                    ratio = parseRatioFromXml(pastRceptNo)
+                    try:
+                        logger.info(parseNumberFromStatement(ratio))
+                    except:
+                        logger.error("다시 못찾음")
         except UnicodeDecodeError as e:
             logger.error(company + "  " + "UnicodeDecodeError")
         except IndexError as e:
