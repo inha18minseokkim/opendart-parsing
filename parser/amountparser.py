@@ -1,25 +1,9 @@
-import xml.etree.ElementTree as elemTree
+import sys
 import re
 from bs4 import BeautifulSoup
 from loguru import logger
-import os
-
-def parseAmountNumberfromString(text):
-    # 10주 << 이거 파싱할거
-    pattern = r'(\d+)'
-
-    # Using re.search to find the pattern in the text
-    match = re.search(pattern, text)
-
-    # Extracting the percentage value if a match is found
-    if match:
-        amountValue = int(match.group(1))
-        #print(text, amountValue)
-        return amountValue  # Output: 50
-    else:
-        raise Exception("주식수량 변환 실패")
 def parseAmountFromXml(xmlName):
-    targetXmlFilePath = f"resources/reports/{xmlName}"
+    targetXmlFilePath = f"../resources/reports/{xmlName}"
     codedXmlFile = ""
     try:
         with open(targetXmlFilePath, 'r', encoding='utf-8') as f:
@@ -31,28 +15,13 @@ def parseAmountFromXml(xmlName):
     ele = BeautifulSoup(codedXmlFile,'lxml')
     for pTag in ele.findAll('p'):
         pTag.replace_with(pTag.text)
-    # for spanTag in ele.findAll('span'):
-    #     spanTag.replace_with(spanTag.text)
+
 
     trLi = ele.findAll('tr')
     flag = False
     resArr = []
     for idx in range(len(trLi)):
         curTr = trLi[idx]
-
-        # if len(curTr.findAll('th')) != 0 \
-        #         and (curTr.findAll('th')[0].text.strip() == '청약주식수' or curTr.findAll('th')[0].text.strip() == '청약증권수' )\
-        #         and curTr.findAll('th')[1].text.strip() == '청약단위':
-        #     try:
-        #         tmpArr = []
-        #         tmpArr.append(f'{ele.find("title").text:20}')
-        #         first = trLi[idx + 1].findAll('td')[0].text.strip().replace('\n', ' ').replace(' ','')
-        #         tmpArr.append(f'{first:30}')
-        #         second = trLi[idx+1].findAll('td')[1].text.strip().replace('\n',' ').replace(' ','')
-        #         tmpArr.append(f'{second:30}')
-        #         return tmpArr
-        #     except:
-        #         logger.error(xmlName + " 오류")
 
         if len(curTr.findAll('td')) != 0 \
                 and (curTr.findAll('td')[0].text.strip() == '청약주식수' or curTr.findAll('td')[0].text.strip() == '청약증권수' or curTr.findAll('td')[0].text.strip() == '구분')\
@@ -64,10 +33,26 @@ def parseAmountFromXml(xmlName):
                 tmpArr.append(f'{first:30}')
                 second = trLi[idx + 1].findAll('td')[1].text.strip().replace('\n', ' ').replace(' ','')
                 tmpArr.append(f'{second:30}')
-                return tmpArr
+                # return tmpArr
             except:
                 logger.error(xmlName +" 오류")
-    #logger.debug(ele)
-    #logger.debug(ele.find('title'))
+            resArr += tmpArr
     resArr.append(f'{ele.find("title").text:20}')
-    return resArr
+    resAmount = []
+    for r in resArr:
+        logger.info(r)
+        amount = parse_amount(r.strip())
+        if amount is not None:
+            resAmount.append(amount)
+    return resAmount
+
+def parse_amount(value):
+    # 숫자와 "주" 패턴을 매칭하고 숫자만 추출
+    match = re.search(r'(\d+)주', value)
+    if match:
+        return int(match.group(1))
+    return None  # "주"가 포함되지 않은 경우 None 반환
+
+if __name__ == "__main__":
+    #"20230413001207.xml"
+    logger.info(min(parseAmountFromXml(sys.argv[1])))

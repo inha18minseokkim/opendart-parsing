@@ -1,24 +1,7 @@
-import xml.etree.ElementTree as elemTree
+import sys
 import re
 from bs4 import BeautifulSoup
 from loguru import logger
-import os
-
-
-def parseNumberFromStatement(text: str)-> float:
-    # 미래에셋대우㈜의 일반청약자 청약증거금율은 50%입니다
-    pattern = r'(\d+)%'
-
-    # Using re.search to find the pattern in the text
-    match = re.search(pattern, text)
-
-    # Extracting the percentage value if a match is found
-    if match:
-        percentage_value = float(match.group(1))
-        #print(text, percentage_value)
-        return percentage_value  # Output: 50
-    else:
-        raise Exception("최후의 변환 실패")
 
 def parseNumber(target: str) -> float:
     try:
@@ -28,7 +11,7 @@ def parseNumber(target: str) -> float:
         return float(target[0:target.find('%')])
 
 def parseStatement(xmlName):
-    targetXmlFilePath = f"./resources/reports/{xmlName}"
+    targetXmlFilePath = f"../resources/reports/{xmlName}"
     codedXmlFile = ""
     try:
         with open(targetXmlFilePath, 'r', encoding='utf-8') as f:
@@ -46,7 +29,7 @@ def parseStatement(xmlName):
             return trLi[i].text
     return "못찾음"
 def parseRatioFromXml(xmlName):
-    targetXmlFilePath = f"./resources/reports/{xmlName}"
+    targetXmlFilePath = f"../resources/reports/{xmlName}"
     codedXmlFile = ""
     try:
         with open(targetXmlFilePath, 'r', encoding='utf-8') as f:
@@ -70,8 +53,6 @@ def parseRatioFromXml(xmlName):
                 return parseNumber(trLi[idx+1].findAll('td')[3].text)
             except:
                 logger.error(trLi[idx + 1].findAll('td')[3].text)
-                # return parseStatement(xmlName)
-            # return float(trLi[idx+1].findAll('td')[3].text.replace("%","").strip())
 
         if len(curTr.findAll('td')) == 5 and '증거금' in curTr.findAll('td')[4].text.strip():
             #logger.info(curTr.text)
@@ -79,6 +60,8 @@ def parseRatioFromXml(xmlName):
                 return parseNumber(trLi[idx+1].findAll('td')[4].text)
             except:
                 logger.error(trLi[idx+1].findAll('td')[4].text)
-                #return parseStatement(xmlName)
-            # return float(trLi[idx + 1].findAll('td')[4].text.replace("%","").strip())
+
     return parseStatement(xmlName)
+if __name__ == "__main__":
+    #"20230413001207.xml"
+    logger.info(parseRatioFromXml(sys.argv[1]))
